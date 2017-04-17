@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>购物车</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/ui-flex.css"/>
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>
+		<script src="js/vue.js"></script>
+    	<script src="js/vue-resource.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<!--<p>{{title}}</p>-->
+			<div class="container">
+				<div class="cart">
+					<div class="checkout-title b-bottom">
+						<span>购物车</span>
+					</div>
+				</div>
+				<div class="item-list-wrap">
+					<div class="cart-item">
+						<div class="cart">
+							<ul class="ui-flexbox">
+								<li class="ui-flex4">商品信息</li>
+								<li class="ui-flex1">商品金额</li>
+								<li class="ui-flex1">商品数量</li>
+								<li class="ui-flex1">总金额</li>
+								<li class="ui-flex1">编辑</li>
+							</ul>
+						</div>
+						<ul class="cart-item-list">
+							<li class="ui-flexbox b-bottom" v-for="(item,index) in productList">
+								<div class="cart-tab-1 ui-flex4">
+									<div class="cart-item-check fl ui-flexbox ui-acenter ui-jcenter">
+										<span class="checkedBox"  v-bind:class="{'checked':item.checked}" @click="selectProduct(productList,item)">
+									    </span>
+									</div>
+									<div class="cart-item-pic fl ui-flexbox ui-acenter ui-jcenter">
+										<img v-bind:src="item.productImage">
+									</div>
+									<div class="cart-item-title fl">
+										<div class="item-name">{{item.productName}}</div>
+										<div class="item-include">
+											<dl>
+												<dt>赠送：</dt>
+												<dd v-for="i in item.parts">{{i.partsName}}</dd>
+											</dl>
+										</div>
+									</div>
+									
+								</div>
+								<div class="cart-tab-2 ui-flex1 ui-flexbox ui-acenter ui-jcenter">
+									<div class="item-price tc">
+										{{item.productPrice | formatMoney}}
+									</div>
+								</div>
+								<div class="cart-tab-3 ui-flex1 ui-flexbox ui-acenter ui-jcenter">
+									<div class="select-self select-self-open">
+										<div class="quentity tc">
+											<a href="javascript:;"  @click="changeQuantity(item, -1)">-</a>
+											<input type="text" v-model="item.productQuantity" disabled="" />
+										    <a href="javascript:;" @click="changeQuantity(item, 1)">+</a>
+										</div>
+										<div class="item-stock tc">
+											有货
+										</div>
+									</div>
+									
+								</div>
+								<div class="cart-tab-4 ui-flex1 ui-flexbox ui-acenter ui-jcenter">
+									<div class="item-price-total tc">
+										{{item.productPrice*item.productQuantity | money('元')}}
+									</div>
+								</div>
+								<div class="cart-tab-5 ui-flex1 ui-flexbox ui-acenter ui-jcenter">
+									<div class="cart-item-opration tc">
+										<a href="javascript:;" class="item-edit-btn" v-on:click="delItem(item)">删除</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			    <div class="cart-footer ui-flexbox ui-acenter flex-justify">
+			    	<div class="items-select ui-flexbox">
+			    		<span class="checkedBox" v-bind:class="{'checked':checkAllFlag}">
+						</span>
+			    		<span class="red" @click="selectAll(true)">全选</span>
+			    		<span @click="selectAll(false)">取消全选</span>
+			    	</div>
+			    	<div class="counter">
+			    		<span class="total-money">
+                             {{totalMoney}}	元	    			
+			    		</span>
+			    		<button>结账</button>
+			    	</div>
+			    </div>
+			</div>
+			<!--提示框-->
+			<div class="del-tip-box ui-flexbox ui-acenter ui-jcenter" v-bind:class="{'hide':delFlag}">
+				<div class="del-tip">
+					<div class="close-btn" v-on:click="delConfirm (false)"><span>×</span></div>
+					<div class="tip">
+						<span>您确定删除此订单信息吗？</span>
+					</div>
+					<div class="btn-group">
+						<button class="btn-yes" v-on:click="delConfirm (true)">yes</button>
+						<button class="btn-no" v-on:click="delConfirm (false)">no</button>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="js/cart.js"></script>
+</html>
